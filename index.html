@@ -5,93 +5,114 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Etiket Bilgisi</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
       margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f2f2f2;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
+      padding: 20px;
     }
 
     .container {
-      background: white;
-      margin: 20px;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 400px;
+      max-width: 500px;
+      margin: auto;
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 30px 20px;
     }
 
-    h2 {
+    h1 {
       text-align: center;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       margin-bottom: 20px;
     }
 
-    .field {
+    .row {
       display: flex;
       justify-content: space-between;
-      padding: 8px 0;
       border-bottom: 1px solid #eee;
+      padding: 10px 0;
+      font-size: 1rem;
     }
 
-    .field label {
+    .label {
       font-weight: bold;
       color: #333;
-      font-size: 1rem;
     }
 
-    .field span {
+    .value {
       color: #555;
-      font-size: 1rem;
-      text-align: right;
-      max-width: 60%;
-      word-wrap: break-word;
     }
 
-    @media (max-width: 400px) {
-      .field label, .field span {
-        font-size: 0.9rem;
+    .footer-logo {
+      text-align: center;
+      margin-top: 30px;
+      font-weight: bold;
+      font-size: 1rem;
+      color: #888;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 480px) {
+      .row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .value {
+        margin-top: 4px;
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Etiket Bilgisi</h2>
-    <div id="etiket"></div>
+    <h1>Etiket Bilgisi</h1>
+
+    <div class="row"><div class="label">Model:</div><div class="value" id="model"></div></div>
+    <div class="row"><div class="label">Size:</div><div class="value" id="size"></div></div>
+    <div class="row"><div class="label">Inset:</div><div class="value" id="inset"></div></div>
+    <div class="row"><div class="label">Holes:</div><div class="value" id="holes"></div></div>
+    <div class="row"><div class="label">PCD:</div><div class="value" id="pcd"></div></div>
+    <div class="row"><div class="label">CB:</div><div class="value" id="cb"></div></div>
+    <div class="row"><div class="label">Color:</div><div class="value" id="color"></div></div>
+    <div class="row"><div class="label">Date:</div><div class="value" id="date"></div></div>
+    <div class="row"><div class="label">Status:</div><div class="value" id="status"></div></div>
+    <div class="row"><div class="label">Fiyat:</div><div class="value" id="fiyat"></div></div>
+  </div>
+
+  <div class="footer-logo">
+    Ensar Jant Lastik
   </div>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const data = urlParams.get("data");
+    function getParameterByName(name) {
+      const url = window.location.href;
+      const paramName = name.replace(/[\[\]]/g, "\\$&");
+      const regex = new RegExp("[?&]" + paramName + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
 
-    if (data) {
+    const json = getParameterByName("data");
+    if (json) {
       try {
-        const json = JSON.parse(decodeURIComponent(data));
-        const container = document.getElementById("etiket");
-
-        for (const key in json) {
-          if (json.hasOwnProperty(key)) {
-            const field = document.createElement("div");
-            field.className = "field";
-            field.innerHTML = `<label>${key.toUpperCase()}:</label> <span>${json[key]}</span>`;
-            container.appendChild(field);
-          }
-        }
-      } catch (err) {
-        document.getElementById("etiket").innerText = "Veri çözümlenemedi.";
+        const obj = JSON.parse(json);
+        document.getElementById("model").innerText = obj.model || "";
+        document.getElementById("size").innerText = obj.size || "";
+        document.getElementById("inset").innerText = obj.inset || "";
+        document.getElementById("holes").innerText = obj.holes || "";
+        document.getElementById("pcd").innerText = obj.pcd || "";
+        document.getElementById("cb").innerText = obj.cb || "";
+        document.getElementById("color").innerText = obj.color || "";
+        document.getElementById("date").innerText = obj.date || "";
+        document.getElementById("status").innerText = obj.status || "";
+        document.getElementById("fiyat").innerText = obj.fiyat || "";
+      } catch (e) {
+        console.error("JSON parse hatası:", e);
       }
-    } else {
-      document.getElementById("etiket").innerText = "Veri bulunamadı.";
     }
   </script>
 </body>
